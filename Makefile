@@ -7,9 +7,6 @@ all:
 	# First run gppConf.py
 	python config.py
 
-	# Next make the glider data processing files
-	cd gliderDataProcessing && make && cd ..
-
 	# Now, go to the gpplib directory and make it
 	cd gpplib && make && cd ..
 
@@ -25,6 +22,5 @@ home_install:
 
 
 clean:
-	cd gliderDataProcessing && make clean && cd ..
 	cd gpplib && make clean && cd ..
 	rm config.shelf
