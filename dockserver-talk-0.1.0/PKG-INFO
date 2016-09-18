@@ -1,0 +1,25 @@
+Metadata-Version: 1.0
+Name: dockserver-talk
+Version: 0.1.0
+Summary: A python package for communication with a Slocum glider dockserver.
+Home-page: https://sourceforge.net/projects/dockserver-talk
+Author: Lucas Merckelbach
+Author-email: lucas.merckelbach@hzg.de
+License: GPLv.3
+Description: 
+                        dockserver-talk
+        
+        Dockserver-talk is a python package intended for communication with a Slocum glider
+        dockserver. 
+        
+        
+        Two applications that have been built using this package:
+        
+        B.UG.S: an application to track  buoys, underwater gliders and ships, respective to a reference 
+                location (e.g. a ship)
+        
+        Surfalarm : an application that interfaces with a (GSM) modem. It can send text messages, or 
+                    initiate phone calls, depending on particular strings seen in the glider dialogs.
+        
+        
+Platform: UNKNOWN

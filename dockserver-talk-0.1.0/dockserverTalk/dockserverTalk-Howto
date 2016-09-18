@@ -1,0 +1,47 @@
+
+
+
+                          DockserverTalk Howto
+
+
+
+version 0.1
+Initial
+22 May, 2010 Lucas Merckelbach lmm@noc.soton.ac.uk
+
+version 0.2
+Updated to reflect changes (enhancements) of the code and xlocator.py
+29 July, 2010 Lucas Merckelbach lmm@noc.soton.ac.uk
+
+version 0.3
+Back to basics. This document is about dockserverTalk.
+
+Contents:
+
+0 Introduction
+
+1 Install
+
+0 Introduction
+
+DockserverTalk is a python module that facilitates to build applications
+that can talk directly to a Teledyne WebbResearch dockserver. The most
+simple example is to intercept all the dialogue for a particalur glider. A
+bit more advanced is to parse that output and take specific actions, depending
+on what the dialogue between dockserver and glider is. A future application is
+to automate the communication with a glider by bypassing the use of the 
+well-known and generally despised dockserver xml scripts.
+
+
+
+1 Install
+
+Requirements:
+
+The dockserverTalk module depends on other python modules that are either standard
+or included with the source.
+
+
+Lucas Merckelbach 17 Aug 2010 2010
+
+email lmm@noc.soton.ac.uk

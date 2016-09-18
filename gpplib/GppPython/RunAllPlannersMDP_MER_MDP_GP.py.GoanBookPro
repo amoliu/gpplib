@@ -1,0 +1,143 @@
+import gpplib
+from gpplib.SA_Replanner2 import *
+from gpplib.SwitchingSA_MDP import *
+from gpplib.SwitchingGP_MDP import *
+from gpplib.Utils import *
+from gpplib.LatLonConversions import *
+from gpplib.PseudoWayptGenerator import *
+import os, sys
+import time, datetime
+from collections import namedtuple
+
+
+class PlannerResult:
+    def __init__(self,**kwargs):
+        self.PlannerType = ''
+        self.Result = {}
+        self.Result['DescStr'] = []
+        self.Result['Risk'], self.Result['pathLength'], self.Result['Time'] = [], [], []
+        self.Result['numHops'], self.Result['distFromGoal'], self.Result['CollisionReason'] = [], [], []
+        self.Result['isSuccess'], self.Result['finalLoc'], self.Result['pathLen'] = [], [], []
+        self.Result['Successes'], self.Result['Collisions'] = [], []
+        self.Result['start'], self.Result['goal'] = [], []
+        if kwargs.has_key('PlannerType'):
+            self.PlannerType = kwargs['PlannerType']
+        self.totResults = 0
+
+    def UpdateWithResultOfRun(self,**kwargs):
+        if kwargs.has_key('start'):
+            self.Result['start'].append(kwargs['start'])
+        if kwargs.has_key('goal'):
+            self.Result['goal'].append(kwargs['goal'])
+        if kwargs.has_key('Risk'):
+            self.Result['Risk'].append(kwargs['Risk'])
+        if kwargs.has_key('Time'):
+            self.Result['Time'].append(kwargs['Time'])
+        if kwargs.has_key('numHops'):
+            self.Result['numHops'].append(kwargs['numHops'])
+        if kwargs.has_key('distFromGoal'):
+            self.Result['distFromGoal'].append(kwargs['distFromGoal'])
+        if kwargs.has_key('finalLoc'):
+            self.Result['finalLoc'].append(kwargs['finalLoc'])
+        if kwargs.has_key('pathLen'):
+            self.Result['pathLen'].append(kwargs['pathLen'])
+        if kwargs.has_key('DescStr'):
+            self.Result['DescStr'].append(kwargs['DescStr'])
+
+        if kwargs.has_key('isSuccess'):
+            self.Result['isSuccess'].append(kwargs['isSuccess'])
+            if kwargs['isSuccess']:
+                self.Result['Successes'].append(1)
+            else:
+                self.Result['Successes'].append(0)
+        if kwargs.has_key('CollisionReason'):
+            self.Result['CollisionReason'].append(kwargs['CollisionReason'])
+            if kwargs['CollisionReason'] == 'Obstacle':
+                self.Result['Collisions'].append(1)
+            else:
+                self.Result['Collisions'].append(0)
+        self.totResults += 1
+
+    def ComputeTotAvg(self,resArr):
+        totalR, avgR, numR = 0., 0., 0.
+        for r in resArr:
+            totalR+=r
+            numR +=1
+        if numR > 0:
+            avgR = totalR/numR
+        return totalR, avgR
+
+        
+    def ComputeTotalsAndAverages(self):
+        self.Totals = namedtuple('Totals',['Risk','Time','numHops','distFromGoal','Successes','Collisions','pathLen' ])
+        self.Averages = namedtuple('Averages',['Risk','Time','numHops','distFromGoal','Successes','Collisions','pathLen'])
+        
+        rT,rA = self.ComputeTotAvg(self.Result['Risk'])
+        tT,tA = self.ComputeTotAvg(self.Result['Time'])
+        hT,hA = self.ComputeTotAvg(self.Result['numHops'])
+        dT,dA = self.ComputeTotAvg(self.Result['distFromGoal'])
+        sT,sA = self.ComputeTotAvg(self.Result['Successes'])
+        cT,cA = self.ComputeTotAvg(self.Result['Collisions'])
+        pT,pA = self.ComputeTotAvg(self.Result['pathLen'])
+        self.Totals.Risk,self.Totals.Time,self.Totals.numHops,self.Totals.distFromGoal, \
+            self.Totals.Successes, self.Totals.Collisions, self.Totals.pathLen = rT,tT,hT,dT,sT,cT,pT
+        self.Averages.Risk, self.Averages.Time, self.Averages.numHops, self.Averages.distFromGoal, \
+            self.Averages.Successes, self.Averages.Collisions, self.Averages.pathLen = rA,tA,hA,dA,sA,cA,pA
+        return self.Totals, self.Averages
+
+
+
+
+
+llconv = LLConvert()
+yy,mm,dd,hr,mi = 2012,8,4,19,24
+posNoise, curNoise1 = 0.01, 0.01
+numDays = 0
+
+rmdprGp = SwitchingMdpGP(StoreAllPngs=False); rmdprGpPr = PlannerResult(PlannerType='SwitchingGP_MDP')
+rmdpr = SwitchingMdp(StoreAllPngs=False); rmdprPr = PlannerResult(PlannerType='SwitchingSA_MDP')
+rmdprGp.saMdp.gm.PlotNewRiskMapFig(False)
+#rmdpr.LoadTransitionModelsFromShelf(yy, mm, dd, hr, mi, posNoise, curNoise1 )
+start_wLat, start_wLon = 3331.063, -11820.310 # Real Start
+#start_wLat, start_wLon = 3330.150, -11843.898 # Reversed Start
+
+start_Lat, start_Lon = llconv.WebbToDecimalDeg(start_wLat, start_wLon)
+startX,startY = rmdpr.saMdp.gm.GetXYfromLatLon(start_Lat,start_Lon)
+goal_wLat, goal_wLon = 3330.150, -11843.898 # Real Goal
+#goal_wLat, goal_wLon = 3331.063, -11820.310 # Reversed Goal
+goal_Lat, goal_Lon = llconv.WebbToDecimalDeg(goal_wLat, goal_wLon)
+goalX,goalY = rmdpr.saMdp.gm.GetXYfromLatLon(goal_Lat,goal_Lon)
+start = (int(startX+0.5),int(startY+0.5))
+goal = (int(goalX+0.5),int(goalY+0.5))
+print 'Start is: (%d,%d)'%(start[0],start[1])
+print 'Goal is: (%d,%d)'%(goal[0],goal[1])
+
+dt = datetime.datetime(yy,mm,dd,hr,mi)
+
+for i in range(0,10):
+    newdt =dt +  datetime.timedelta(hours=6*i)
+    yy,mm,dd,hr,mi = newdt.year,newdt.month, newdt.day, newdt.hour, newdt.minute
+    thetaVal = {'w_r':-1.,'w_g':100.}
+    #rmdpr.GetIndexedPolicy(yy,mm,dd,hr,mi,goal,theta=thetaVal)
+    #rmdpr.saMdp.DisplayPolicy()
+    #plt.title('MDP Policy with goal (%d,%d)'%(goal[0],goal[1]))
+    #plt.savefig('SAmdp_execution_%s.png'%(str(dt)))
+    rtc = RomsTimeConversion()
+    s_indx = rtc.GetRomsIndexFromDateTime(yy,mm,dd,newdt)
+    rmdprGp.RunSwitchingMDPforNhours(yy,mm,dd,hr,mi,start,goal,200,posNoise=0.001,curNoise=curNoise1,lineType='g-')
+    rmdprGpPr.UpdateWithResultOfRun(DescStr='GPMDP_%04d%02d%02d_%02d%02d_%.3f_%.3f'%(yy,mm,dd,hr,mi,0.001,curNoise1), \
+                start=start,goal=goal,Risk=rmdprGp.totalRisk,Time=rmdprGp.totalTime,numHops=rmdprGp.totNumHops,
+                pathLen=rmdprGp.totPathLength,CollisionReason=rmdprGp.CollisionReason,distFromGoal=rmdprGp.totalDistFromGoal,
+                isSuccess=rmdprGp.isSuccess)
+    
+    rmdpr.RunSwitchingMDPforNhours(yy,mm,dd,hr,mi,start,goal,200,posNoise=posNoise,curNoise=curNoise1,lineType='r-')
+    rmdprPr.UpdateWithResultOfRun(DescStr='SAMDP_%04d%02d%02d_%02d%02d_%.3f_%.3f'%(yy,mm,dd,hr,mi,posNoise,curNoise1), \
+                start=start,goal=goal,Risk=rmdpr.totalRisk,Time=rmdpr.totalTime,numHops=rmdpr.totNumHops,
+                pathLen=rmdpr.totPathLength,CollisionReason=rmdpr.CollisionReason,distFromGoal=rmdpr.totalDistFromGoal,
+                isSuccess=rmdpr.isSuccess)
+totSwGP,avgSwGP = rmdprGpPr.ComputeTotalsAndAverages()
+totSwMDP,avgSwGP = rmdprPr.ComputeTotalsAndAverages()
+
+#plt.figure(); rmdpr.saMdp.gm.PlotNewRiskMapFig(); rmdpr.saMdp.gm.PlotCurrentField(s_indx)
+#rmdpr.saMdp.SimulateAndPlotMDP_PolicyExecution(start,goal,s_indx,False,'r-')
+        

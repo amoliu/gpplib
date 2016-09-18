@@ -1,3 +1,0 @@
-v<1.0.0a>, <2012-5-10> -- Initial release.
-v<1.0.1a>, <2012-5-15> -- Pre-alpha release, with Doxygen and Sphynx documentation building fairly well.
-

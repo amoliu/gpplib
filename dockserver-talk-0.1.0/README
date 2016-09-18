@@ -1,0 +1,30 @@
+DockserverTalk
+
+A Python module to interface to a WebbResearch dockserver.
+
+INSTALL
+
+This python package only depends on standard modules/packages and
+no other specific software should be required to be downloaded.
+The dockserverTalk module contains a finite state machine, which has
+been implemented by Noah Spurrier, see the header of fsm.py
+
+To install:
+
+python setup.py build
+
+and (as root)
+
+python setup.py install
+
+In {sys.prefix}/share/dockserverTalk/examples you can find some
+example codes how to use this package. (The sys.prefix is most likely
+the directory /usr.)
+
+If you write some application using this module and you think it may be
+usefule for the wider glider community, please consider to become a 
+developer of this project and make the project available via sourceforge.
+
+30 July 2012
+Lucas Merckelbach lucas.merckelbach@hzg.de
+

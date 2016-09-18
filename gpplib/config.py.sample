@@ -1,0 +1,41 @@
+''' Configuration file which initializes stuff like data directories and 
+other variables, which are commonly used. This file will write a shelf out to disk,
+which is used by everything else.
+
+    Author: Arvind Pereira.
+    Date : 2012-5-6
+
+'''
+import shelve
+
+#! The directory where we store most of our planning-related data such as ROMS currents, etc.
+myDataDir = '/Users/arvind/data/'
+
+#! Directory in which ROMS sfcst_* files are stored. ( Could also be an absolute path ). 
+romsDataDir = myDataDir+'roms/'
+
+#! Directory in which Geoff's Interpolation Variance values are stored.
+romsGpDataDir = myDataDir+'romsGP/'
+
+#! Directory in which NoisyGliderModels are stored.
+noisyGliderModelsDir = myDataDir+'NoisyGliderModels/'
+
+#! Directory in which NoiselessGliderModels are stored.
+noiseLessGliderModelDir = myDataDir+'gliderModels/'
+
+#! Directory in which the Risk Maps are stored
+riskMapDir = myDataDir
+
+#! Directory in which the PGM/MAP files with Risk values are stored.
+riskPgmMapDir= myDataDir+'riskMaps/'
+
+#! Save out the shelf file
+gppConf = shelve.open('config.shelf')
+gppConf['myDataDir'] = myDataDir
+gppConf['romsDataDir'] = romsDataDir
+gppConf['noisyGliderModelsDir'] = noisyGliderModelsDir
+gppConf['noiseLessGliderModelDir'] = noiseLessGliderModelDir
+gppConf['riskMapDir'] = riskMapDir
+gppConf['riskPgmMapDir'] = riskPgmMapDir
+gppConf['romsGpDataDir']=romsGpDataDir
+gppConf.close()

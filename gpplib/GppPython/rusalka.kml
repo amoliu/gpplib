@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+<name></name><StyleMap id="msn_airports">
+<Pair><key>normal</key><styleUrl>#sn_airports</styleUrl></Pair>
+<Pair><key>highlight</key><styleUrl>#sh_airports</styleUrl></Pair>
+</StyleMap>
+<Style id="sh_airports"><IconStyle><color>ff10ffe8</color><scale>1.4</scale>
+<Icon><href>http://maps.google.com/mapfiles/kml/shapes/airports.png</href></Icon>
+<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+</IconStyle></Style>
+<Style id="sn_airports"><IconStyle><color>ff10ffe8</color><scale>1.2</scale>
+<Icon><href>http://maps.google.com/mapfiles/kml/shapes/airports.png</href></Icon>
+<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+</IconStyle></Style>
+<Folder>
+<name>Pred_rusalka</name>
+<Placemark>
+<name>Prediction_A_MDP_28.MI</name>
+<styleUrl>#msn_airports</styleUrl>
+<gx:Track><when>2012-07-24T11:18:40Z</when>
+<when>2012-07-24T14:59:30Z</when>
+<when>2012-07-24T20:14:30Z</when>
+<when>2012-07-24T21:10:20Z</when>
+<when>2012-07-25T02:04:30Z</when>
+<gx:coord>-118.553883 33.568933 0.000000 </gx:coord>
+<gx:coord>-118.531027 33.576179 0.000000 </gx:coord>
+<gx:coord>-118.501288 33.557178 0.000000 </gx:coord>
+<gx:coord>-118.506254 33.559682 0.000000 </gx:coord>
+<gx:coord>-118.482181 33.567021 0.000000 </gx:coord>
+<altitudeMode>relativeToGround</altitudeMode>
+<altitudeMode>relativeToGround</altitudeMode>
+<altitudeMode>relativeToGround</altitudeMode>
+<altitudeMode>relativeToGround</altitudeMode>
+<altitudeMode>relativeToGround</altitudeMode>
+</gx:Track>
+</Placemark>
+</Folder>
+</Document>
+</kml>

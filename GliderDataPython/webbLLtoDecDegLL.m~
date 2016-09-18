@@ -1,0 +1,7 @@
+function [lat, lon] = webbLLtoDecDegLL( wLat, wLon )
+    latSign = sign( wLat ); lonSign = sign( wLon );
+    latDeg = floor( abs(wLat) )/100; lonDeg = floor( abs(wLon) );
+    latMin = abs(wLat) - (abs(latDeg).*100; 
+    
+
+

@@ -1,0 +1,109 @@
+# Auto-generated Mission file for Slocum Gliders. Filename: R_MER_27.MI
+# Created by GPPLIB at 2012-08-16 13:00:55.036594  (c) Arvind Pereira.
+
+# 
+
+sensor: u_console_reqd_cd_off_time(sec) 15.0 # in, how long without CD before powering off
+					# modem if C_CONSOLE_ON == 1
+sensor: u_use_current_correction(nodim) 0 # CALCULATE_BUT_DONT_USE_M_WATER_VX/Y
+sensor: c_console_on(bool) 1 # AUTO_ON_AUTO_OFF_UW_NOCD
+
+# 
+behavior: abend
+	b_arg: samedepth_for_sample_time(s) 30.0 # how often to check.
+	b_arg: overtime(s) -1.0 # < 0 disables
+	b_arg: overdepth_sample_time(s) 10.0 # how often to check.
+
+# Come up briefly if "yo" finishes
+# This happens if a bad altimeter hit causes a dive and climb to
+# complete in same cycle. We surface and hopefully yo restarts
+behavior: surface
+	b_arg: keystroke_wait_time(sec) 180 # Wait 180 secs at surface for keystroke
+	b_arg: args_from_file(enum) 10 # >= 0 enables reading from mafiles/surfac<N>.ma
+	b_arg: gps_wait_time(sec) 300 # Wait 300 secs at surface  for GPS
+	b_arg: report_all(bool) 0 # T->report all sensors once, F->just GPS
+	b_arg: end_action(enum) 1 # WAIT_FOR_CTRL-C_OR_RESUME
+	b_arg: force_iridium_use(nodim) 1 # FORCE_IRIDIUM_USE
+	b_arg: start_when(enum) 2 # BAW_PITCH_IDLE
+
+# Come up if haven't had comms for more than 18000 seconds (or 5.00 hours)
+behavior: surface
+	b_arg: when_secs(sec) 18000 # No-Comms limit is 18000 sec (or 5.00 hours)
+	b_arg: keystroke_wait_time(sec) 300 # Wait 300 secs at surface for keystroke
+	b_arg: args_from_file(enum) 10 # >= 0 enables reading from mafiles/surfac<N>.ma
+	b_arg: gps_wait_time(sec) 300 # Wait 300 secs at surface  for GPS
+	b_arg: report_all(bool) 0 # T->report all sensors once, F->just GPS
+	b_arg: end_action(enum) 1 # WAIT_FOR_CTRL-C_OR_RESUME
+	b_arg: force_iridium_use(nodim) 1 # FORCE_IRIDIUM_USE
+	b_arg: start_when(enum) 12 # BAW_NOCOMM_SECS
+
+# Come up every way point
+behavior: surface
+	b_arg: keystroke_wait_time(sec) 300 # Wait 300 secs at surface for keystroke
+	b_arg: args_from_file(enum) 10 # >= 0 enables reading from mafiles/surfac<N>.ma
+	b_arg: gps_wait_time(sec) 300 # Wait 300 secs at surface  for GPS
+	b_arg: when_wpt_dist(m) 10 # How close to waypoint before surfacing.
+	b_arg: report_all(bool) 0 # T->report all sensors once, F->just GPS
+	b_arg: end_action(enum) 1 # WAIT_FOR_CTRL-C_OR_RESUME
+	b_arg: force_iridium_use(nodim) 1 # FORCE_IRIDIUM_USE
+	b_arg: start_when(enum) 8 # BAW_WHEN_HIT_WAYPOINT
+
+# Come up when requested by science
+behavior: surface
+	b_arg: keystroke_wait_time(sec) 15 # Wait 15 secs at surface for keystroke
+	b_arg: args_from_file(enum) 10 # >= 0 enables reading from mafiles/surfac<N>.ma
+	b_arg: gps_wait_time(sec) 300 # Wait 300 secs at surface  for GPS
+	b_arg: report_all(bool) 0 # False-> report just GPS
+	b_arg: end_action(enum) 1 # WAIT_FOR_CTRL-C_OR_RESUME
+	b_arg: force_iridium_use(nodim) 1 # FORCE_IRIDIUM_USE
+	b_arg: start_when(enum) 11 # BAW_SCI_SURFACE
+
+# Come up at UTC datetime: 2012-08-23, 17:45
+behavior: surface
+	b_arg: when_utc_day(day) 23 # 1-31, -1 any day
+	b_arg: start_when(enum) 13 # BAW_WHEN_UTC_TIME
+	b_arg: keystroke_wait_time(sec) 300 # Wait 300 secs at surface for keystroke
+	b_arg: args_from_file(enum) 10 # >= 0 enables reading from mafiles/surfac<N>.ma
+	b_arg: when_utc_month(month) 8 # 1-12, -1 any month
+	b_arg: gps_wait_time(sec) 300 # Wait 300 secs at surface  for GPS
+	b_arg: when_utc_hour(hour) 17 # 0-23, -1 any hour
+	b_arg: report_all(bool) 0 # T->report all sensors once, F->just GPS
+	b_arg: end_action(enum) 1 # WAIT_FOR_CTRL-C_OR_RESUME
+	b_arg: force_iridium_use(nodim) 1 # FORCE_IRIDIUM_USE
+	b_arg: when_utc_min(min) 45 # 0-59, -1 any minute
+	b_arg: when_utc_on_surface(bool) 1 #  If true, adjust when_utc_month/day/hour/min to get glider on surface by this time.
+
+# Come up when mission done
+# This is determined by no one steering in x-y plane (no waypoints)
+behavior: surface
+	b_arg: keystroke_wait_time(sec) 300 # Wait 300 secs at surface for keystroke
+	b_arg: args_from_file(enum) 10 # >= 0 enables reading from mafiles/surfac<N>.ma
+	b_arg: gps_wait_time(sec) 300 # Wait 300 secs at surface  for GPS
+	b_arg: report_all(bool) 0 # T->report all sensors once, F->just GPS
+	b_arg: end_action(enum) 0 # QUIT
+	b_arg: force_iridium_use(nodim) 1 # FORCE_IRIDIUM_USE
+	b_arg: start_when(enum) 3 # BAW_HEADING_IDLE
+
+# 
+behavior: yo
+	b_arg: args_from_file(enum) 10 # read from mafiles/yo10.ma
+	b_arg: end_action(enum) 2 # RESUME
+	b_arg: start_when(enum) 2 # BAW_PITCH_IDLE
+
+# 
+behavior: goto_list
+	b_arg: args_from_file(enum) 27 # read waypoint list from mafiles/goto_l27.ma
+	b_arg: start_when(enum) 0 # BAW_IMMEDIATELY
+
+# 
+behavior: sample
+	b_arg: intersample_time(s) 0 # if < 0 then off, if =0 then full-speed.
+
+# 
+behavior: prepare_to_dive
+	b_arg: wait_time(s) 720 # Wait 12 minutes for gps
+	b_arg: start_when(enum) 0 # BAW_IMMEDIATELY
+
+# Turn-most input sensors off
+behavior: sensors_in
+

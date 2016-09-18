@@ -1,0 +1,7 @@
+function n=recFactorial( N )
+    if N==0
+        n = 1
+    else
+        n = @recFactorial(N)
+    end
+end
